@@ -1,0 +1,168 @@
+public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String jugador1 = null;
+        String jugador2 = null;
+        char jugadorActual = 0;
+        String jugadorAc = "";
+        int tamaño;
+        System.out.println("Dime un tamaño para jugar al N en Raya");
+        tamaño = scanner.nextInt();
+        scanner.nextLine(); // Limpia el buffer
+        char[][] tablero = new char[tamaño][tamaño];
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero.length; j++) {
+                tablero[i][j] = ' ';
+            }
+        }
+        iniciarJuego(tablero, jugadorActual, jugador1, jugador2, scanner);
+    }
+
+    // Método donde crea a un Jugador
+    public static String crearJugador(Scanner scanner) {
+        System.out.println("Dime tu nombre:");
+        return scanner.nextLine();
+    }
+
+    // Método que controla el flujo del juego
+    public static void iniciarJuego(char[][] tablero, char jugadorActual, String jugador1, String jugador2, Scanner scanner) {
+        boolean juegoTerminado = false;
+        jugador1 = crearJugador(scanner);
+        jugador2 = crearJugador(scanner);
+        int tamaño = tablero.length;
+        int consecutivosNecesarios = 3; // Cambia este valor según tus preferencias
+        while (!juegoTerminado) { // Bucle principal del juego
+            mostrarTablero(tablero);
+            realizarJugada(scanner, jugadorActual, tablero);
+            // Comprobar si hay un ganador
+            if (hayGanador(tablero, jugadorActual, consecutivosNecesarios)) {
+                mostrarTablero(tablero);
+                System.out.println("¡Jugador " + jugadorActual + " ha ganado!");
+                juegoTerminado = true;
+            } // Comprobar si hay un empate
+            else if (tableroCompleto(tablero)) {
+                mostrarTablero(tablero);
+                System.out.println("¡Empate!");
+                juegoTerminado = true;
+            }
+            // Cambiar al siguiente jugador
+            jugadorActual = (jugadorActual == 'X') ? 'X' : 'O';
+        }
+    }
+
+    // Método para mostrar el tablero actual
+    public static void mostrarTablero(char[][] tablero) {
+        System.out.println("Tablero actual:");
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero.length; j++) {
+                System.out.print(tablero[i][j]);
+                if (j < tablero.length - 1) {
+                    System.out.print(" | ");
+                }
+            }
+            System.out.println();
+            if (i < tablero.length - 1) {
+                for (int k = 0; k < tablero.length * 4 - 1; k++) {
+                    System.out.print("-");
+                }
+                System.out.println();
+            }
+        }
+        System.out.println();
+    }
+
+    // Método para que el jugador actual realice una jugada
+    public static void realizarJugada(Scanner scanner, char jugadorActual, char[][] tablero) {
+        int fila, columna;
+        boolean jugadaValida = false;
+
+        // Bucle para solicitar una jugada válida al jugador actual
+        do {
+            // Solicitar al jugador la fila y la columna de su jugada
+            System.out.print("Jugador " + jugadorActual+ ", ingresa la fila (1-" + tablero.length + "): ");
+            fila = scanner.nextInt() - 1; // Leer la fila ingresada por el jugador y restar 1 para adaptarlo al índice base 0
+            System.out.print("Jugador " + jugadorActual + ", ingresa la columna (1-" + tablero.length + "): ");
+            columna = scanner.nextInt() - 1; // Leer la columna ingresada por el jugador y restar 1 para adaptarlo al índice base 0
+
+            // Comprobar si la casilla elegida por el jugador es válida
+            if (fila >= 0 && fila < tablero.length && columna >= 0 && columna < tablero.length && tablero[fila][columna] == ' ') {
+                tablero[fila][columna] = jugadorActual;
+                jugadaValida = true;
+            } else {
+                System.out.println("Casilla ocupada o entrada inválida. Inténtalo de nuevo."); // Mostrar mensaje de error
+            }
+
+        } while (!jugadaValida);
+    }
+
+    // Método para comprobar si hay un ganador
+    public static boolean hayGanador(char[][] tablero, char jugadorActual, int consecutivosNecesarios) {
+        int tamaño = tablero.length;
+
+        // Comprobar filas
+        for (int i = 0; i < tamaño; i++) {
+            for (int j = 0; j <= tamaño - consecutivosNecesarios; j++) {
+                boolean ganador = true;
+                for (int k = 0; k < consecutivosNecesarios; k++) {
+                    if (tablero[i][j + k] != jugadorActual) {
+                        ganador = false;
+                    }
+                }
+                if (ganador) return true;
+            }
+        }
+
+        // Comprobar columnas
+        for (int i = 0; i < tamaño; i++) {
+            for (int j = 0; j <= tamaño - consecutivosNecesarios; j++) {
+                boolean ganador = true;
+                for (int k = 0; k < consecutivosNecesarios; k++) {
+                    if (tablero[j + k][i] != jugadorActual) {
+                        ganador = false;
+                    }
+                }
+                if (ganador) return true;
+            }
+        }
+
+        // Comprobar diagonal principal
+        for (int i = 0; i <= tamaño - consecutivosNecesarios; i++) {
+            for (int j = 0; j <= tamaño - consecutivosNecesarios; j++) {
+                boolean ganador = true;
+                for (int k = 0; k < consecutivosNecesarios; k++) {
+                    if (tablero[i + k][j + k] != jugadorActual) {
+                        ganador = false;
+                    }
+                }
+                if (ganador) return true;
+            }
+        }
+
+        // Comprobar diagonal secundaria
+        for (int i = 0; i <= tamaño - consecutivosNecesarios; i++) {
+            for (int j = tamaño - 1; j >= consecutivosNecesarios - 1; j--) {
+                boolean ganador = true;
+                for (int k = 0; k < consecutivosNecesarios; k++) {
+                    if (tablero[i + k][j - k] != jugadorActual) {
+                        ganador = false;
+                    }
+                }
+                if (ganador) return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Método para comprobar si el tablero está completo
+    public static boolean tableroCompleto(char[][] tablero) {
+        // Iterar sobre todas las casillas del tablero
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero.length; j++) {
+                if (tablero[i][j] == ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
