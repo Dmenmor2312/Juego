@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class JuegoNRaya {
 
-    private boolean terminado;
+    static boolean terminado;
     private static Jugador[] jugadores;
     Scanner leer = new Scanner(System.in);
 
@@ -17,6 +17,15 @@ public class JuegoNRaya {
         Tablero.crearTablero();
     }
 
+    public void jugar() {
+        while (!terminado) {
+            Tablero.colocarFicha();
+            Tablero.mostrarTablero();
+            boolean verificarFinalizacion = Tablero.verificarFinalizacion(terminado, terminado, terminado, terminado, terminado);
+            cambiarTurno();
+        }
+    }
+
     public void iniciarJuego() {
         while (!terminado) {
             crearJugador();
@@ -26,14 +35,15 @@ public class JuegoNRaya {
         }
     }
 
-    public static String cambiarTurno() {
-        String jugadorActual = null;
+    public static Jugador cambiarTurno() {
+        Jugador jugadorActual = null;
         for (int i = 0; i < jugadores.length; i++) {
             if (jugadores[i].isTurno() == true) {
                 jugadores[i].setTurno(false);
             } else {
                 jugadores[i].setTurno(true);
-                jugadorActual = jugadores[i].getNombre();
+                jugadores[i].getNombre();
+                jugadorActual = jugadores[i];
             }
         }
         return jugadorActual;
