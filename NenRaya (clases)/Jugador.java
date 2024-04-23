@@ -6,10 +6,14 @@ public class Jugador {
     private String nombre;
     private boolean turno;
 
-    public Jugador(char ficha, String nombre, boolean turno) {
-        this.ficha = ficha;
+    public Jugador(boolean turno, String nombre) {
+        turno = false;
         this.nombre = nombre;
-        this.turno = turno;
+    }
+
+    public Jugador(String nombre) {
+        this.nombre = nombre;
+        turno = false;
     }
 
     public char getFicha() {
