@@ -1,24 +1,10 @@
 package n_en_raya;
-
+//Hacer varios juegos al mismo tiempo
 public class Juego {
 
-    private boolean terminado;
-    private Jugador[] jugadores;
-
-    public Juego(boolean terminado, Jugador[] jugadores) {
-        this.terminado = terminado;
-        this.jugadores = jugadores;
-    }
-
-    public void cambiarTurno() {
+    public static void main(String[] args) {
+        Juego juego1 = new Juego();
         
     }
 
-    public void seleccionarJugador() {
-        
-    }
-
-    public void crearJugador() {
-        
-    }
 }
