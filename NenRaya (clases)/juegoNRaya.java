@@ -1,9 +1,11 @@
+package n_en_raya;
+
 import java.util.Scanner;
 
 public class JuegoNRaya {
 
     private boolean terminado;
-    private Jugador[] jugadores;
+    private static Jugador[] jugadores;
     Scanner leer = new Scanner(System.in);
 
     public JuegoNRaya() {
@@ -17,16 +19,19 @@ public class JuegoNRaya {
 
     public void iniciarJuego() {
         while (!terminado) {
-            
+            crearJugador();
+            seleccionarPrimerJugador();
+            Tablero Tablero = new Tablero();
+            Tablero.crearTablero();
         }
     }
 
-    public String cambiarTurno() {
+    public static String cambiarTurno() {
         String jugadorActual = null;
         for (int i = 0; i < jugadores.length; i++) {
             if (jugadores[i].isTurno() == true) {
-               jugadores[i].setTurno(false);
-            }else{
+                jugadores[i].setTurno(false);
+            } else {
                 jugadores[i].setTurno(true);
                 jugadorActual = jugadores[i].getNombre();
             }
@@ -39,9 +44,9 @@ public class JuegoNRaya {
         for (int i = 0; i < jugadores.length; i++) {
             System.out.println("¿Quien es el primer jugador?");
             jugador = leer.next();
-            do{
+            do {
                 jugadores[i].setTurno(true);
-            }while(jugadores[i].getNombre().equals(jugador));
+            } while (jugadores[i].getNombre().equals(jugador));
         }
     }
 
@@ -49,12 +54,12 @@ public class JuegoNRaya {
         String nombre;
         char ficha;
         for (int i = 0; i < jugadores.length; i++) {
-                System.out.println("Dime tu nombre");
-                nombre = leer.next();
-                jugadores[i] = new Jugador(nombre);
-                System.out.println("Dime la ficha que quieres utilizar");
-                ficha = leer.next().charAt(0);
-                jugadores[i].setFicha(ficha);
+            System.out.println("Dime tu nombre");
+            nombre = leer.next();
+            jugadores[i] = new Jugador(nombre);
+            System.out.println("Dime la ficha que quieres utilizar");
+            ficha = leer.next().charAt(0);
+            jugadores[i].setFicha(ficha);
         }
     }
 
