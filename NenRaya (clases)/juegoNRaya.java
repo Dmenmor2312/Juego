@@ -13,11 +13,12 @@ public class JuegoNRaya {
         this.jugadores = new Jugador[2];
         crearJugador();
         seleccionarPrimerJugador();
-        Tablero Tablero = new Tablero();
+        Tablero tablero = new Tablero();
         Tablero.crearTablero();
+        JuegoNRaya.jugar();
     }
 
-    public void jugar() {
+    public static void jugar() {
         while (!terminado) {
             Tablero.colocarFicha();
             Tablero.mostrarTablero();
@@ -26,37 +27,34 @@ public class JuegoNRaya {
         }
     }
 
-    public void iniciarJuego() {
-        while (!terminado) {
-            crearJugador();
-            seleccionarPrimerJugador();
-            Tablero Tablero = new Tablero();
-            Tablero.crearTablero();
+    public static void cambiarTurno(){
+        if(jugadores[0].isTurno()){
+            jugadores[0].setTurno(false);
+            jugadores[1].setTurno(true);
+        } else {
+            jugadores[0].setTurno(true);
+            jugadores[1].setTurno(false);
+        }
+    }
+    
+    public static Jugador jugadorActual() {
+        if (jugadores[0].isTurno()) {
+            return jugadores[0];
+        } else {
+            return jugadores[1];
         }
     }
 
-    public static Jugador cambiarTurno() {
-        Jugador jugadorActual = null;
-        for (int i = 0; i < jugadores.length; i++) {
-            if (jugadores[i].isTurno() == true) {
-                jugadores[i].setTurno(false);
-            } else {
-                jugadores[i].setTurno(true);
-                jugadores[i].getNombre();
-                jugadorActual = jugadores[i];
-            }
-        }
-        return jugadorActual;
-    }
-
-    public void seleccionarPrimerJugador() {
+public void seleccionarPrimerJugador() {
         String jugador;
-        for (int i = 0; i < jugadores.length; i++) {
+        do {
             System.out.println("¿Quien es el primer jugador?");
             jugador = leer.next();
-            do {
-                jugadores[i].setTurno(true);
-            } while (jugadores[i].getNombre().equals(jugador));
+        } while (!jugador.equals(jugadores[0].getNombre()) && !jugador.equals(jugadores[1].getNombre()));
+        if(jugador.equals(jugadores[0])){
+            jugadores[0].setTurno(true);
+        }else{
+            jugadores[1].setTurno(true);
         }
     }
 
