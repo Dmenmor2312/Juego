@@ -4,12 +4,11 @@ import java.util.Scanner;
 
 public class Tablero {
 
-    private static char[][] arrayTablero;
-    private int fichasColocadas;
-    private static Scanner leer = new Scanner(System.in);
+    private char[][] arrayTablero;
 
-    public static void crearTablero() {
+    public void crearTablero() {
         int tamaño;
+        Scanner leer = new Scanner(System.in);
         do {
             System.out.println("Introduce el tamaño del tablero para el N en Raya:");
             tamaño = leer.nextInt();
@@ -17,17 +16,17 @@ public class Tablero {
         arrayTablero = new char[tamaño][tamaño];
     }
 
-    public static void colocarFicha() {
+    public void colocarFicha(Jugador jugadorActual) {
         int fila, columna;
         boolean jugadaValida = false;
+        Scanner leer = new Scanner(System.in);
         while (!jugadaValida) {
-            System.out.print("Jugador " + JuegoNRaya.jugadorActual().getNombre() + ", ingresa la fila (1-" + arrayTablero.length + "): ");
+            System.out.print("Jugador " + jugadorActual.getNombre() + ", ingresa la fila (1-" + arrayTablero.length + "): ");
             fila = leer.nextInt() - 1;
-            System.out.print("Jugador " + JuegoNRaya.jugadorActual().getNombre() + ", ingresa la columna (1-" + arrayTablero.length + "): ");
+            System.out.print("Jugador " + jugadorActual.getNombre() + ", ingresa la columna (1-" + arrayTablero.length + "): ");
             columna = leer.nextInt() - 1;
-
-            if (fila >= 0 && fila < arrayTablero.length && columna >= 0 && columna < arrayTablero.length && arrayTablero[fila][columna] == ' ') {
-                arrayTablero[fila][columna] = JuegoNRaya.jugadorActual().getFicha();
+            if (fila >= 0 && fila < arrayTablero.length && columna >= 0 && columna < arrayTablero.length) {
+                arrayTablero[fila][columna] = jugadorActual.getFicha();
                 jugadaValida = true;
             } else {
                 System.out.println("Casilla ocupada o entrada inválida. Inténtalo de nuevo.");
@@ -35,7 +34,7 @@ public class Tablero {
         }
     }
 
-    public static void mostrarTablero(){
+    public void mostrarTablero() {
         System.out.println("Tablero actual:");
         for (int i = 0; i < arrayTablero.length; i++) {
             for (int j = 0; j < arrayTablero.length; j++) {
@@ -55,97 +54,95 @@ public class Tablero {
         System.out.println();
     }
 
-    public static boolean verificarFinalizacion(boolean filaCompleta, boolean columnaCompleta, boolean diagPrincCompleta, boolean diagInversaCompleta, boolean tableroCompleto) {
-        if (filaCompleta || columnaCompleta || diagPrincCompleta || diagInversaCompleta || tableroCompleto) {
-            JuegoNRaya.terminado = true;
+    public boolean verificarFinalizacion(Jugador jugadorActual) {
+        if (comprobarFila(jugadorActual) || comprobarColumna(jugadorActual) || comprobarDiagonal(jugadorActual)
+                || comprobarDiagonalInversa(jugadorActual)) {
+            System.out.println("El jugador " + jugadorActual.getNombre() + " ha ganado la partida");
+            return true;
         } else {
-            JuegoNRaya.terminado = false;
+            if (tableroCompleto()) {
+                System.out.println("La partida ha quedado en Empate");
+                return true;
+            } else {
+                return false;
+            }
         }
-        return JuegoNRaya.terminado;
     }
 
-    private boolean comprobarFila() {
-        int consecutivosNecesarios = 3;
-        boolean filaCompleta = true;
+    private boolean comprobarDiagonal(Jugador jugador) {
+        int contadorDiagonal = 0;
+
         for (int i = 0; i < arrayTablero.length; i++) {
-            for (int j = 0; j <= arrayTablero.length - consecutivosNecesarios; j++) {
-                for (int k = 0; k < consecutivosNecesarios; k++) {
-                    if (arrayTablero[i][j + k] != JuegoNRaya.jugadorActual().getFicha()) {
-                        filaCompleta = false;
-                    }
-                }
-                if (filaCompleta) {
-                    filaCompleta = true;
-                }
+            if (arrayTablero[i][i] == jugador.getFicha()) {
+                contadorDiagonal++;
             }
         }
-        return filaCompleta;
+
+        return (contadorDiagonal == arrayTablero.length) ? true : false;
     }
 
-    private boolean comprobarColumna() {
-        int consecutivosNecesarios = 3;
-        boolean columnaCompleta = true;
+    private boolean comprobarDiagonalInversa(Jugador jugador) {
+        int contadorDiagonalInversa = 0;
+
         for (int i = 0; i < arrayTablero.length; i++) {
-            for (int j = 0; j <= arrayTablero.length - consecutivosNecesarios; j++) {
-                for (int k = 0; k < consecutivosNecesarios; k++) {
-                    if (arrayTablero[j + k][i] != JuegoNRaya.jugadorActual().getFicha()) {
-                        columnaCompleta = false;
-                    }
-                }
-                if (columnaCompleta) {
-                    columnaCompleta = true;
-                }
+            if (arrayTablero[i][arrayTablero.length - 1 - i] == jugador.getFicha()) {
+                contadorDiagonalInversa++;
             }
         }
-        return columnaCompleta;
+
+        return (contadorDiagonalInversa == arrayTablero.length) ? true : false;
     }
 
-    private boolean comprobarDiagonal() {
-        int consecutivosNecesarios = 3;
-        boolean diagPrincCompleta = true;
-        for (int i = 0; i <= arrayTablero.length - consecutivosNecesarios; i++) {
-            for (int j = 0; j <= arrayTablero.length - consecutivosNecesarios; j++) {
-                for (int k = 0; k < consecutivosNecesarios; k++) {
-                    if (arrayTablero[i + k][j + k] != JuegoNRaya.jugadorActual().getFicha()) {
-                        diagPrincCompleta = false;
-                    }
-                }
-                if (diagPrincCompleta) {
-                    diagPrincCompleta = true;
+    private boolean comprobarColumna(Jugador jugador) {
+        for (int i = 0; i < arrayTablero.length; i++) {
+            int contador = 0;
+            for (int j = 0; j < arrayTablero.length; j++) {
+                if (arrayTablero[j][i] == jugador.getFicha()) {
+                    contador++;
                 }
             }
+            if (contador == arrayTablero.length) {
+                return true;
+            } else {
+                contador = 0;
+            }
         }
-        return diagPrincCompleta;
+        return false;
     }
 
-    private boolean comprobarDiagonalInversa() {
-        int consecutivosNecesarios = 3;
-        boolean diagInversaCompleta = true;
-        for (int i = 0; i <= arrayTablero.length - consecutivosNecesarios; i++) {
-            for (int j = arrayTablero.length - 1; j >= consecutivosNecesarios - 1; j--) {
-                for (int k = 0; k < consecutivosNecesarios; k++) {
-                    if (arrayTablero[i + k][j - k] != JuegoNRaya.jugadorActual().getFicha()) {
-                        diagInversaCompleta = false;
-                    }
-                }
-                if (diagInversaCompleta) {
-                    return true;
+    private boolean comprobarFila(Jugador jugador) {
+        for (int i = 0; i < arrayTablero.length; i++) {
+            int contador = 0;
+            for (int j = 0; j < arrayTablero.length; j++) {
+                if (arrayTablero[i][j] == jugador.getFicha()) {
+                    contador++;
                 }
             }
+            if (contador == arrayTablero.length) {
+                return true;
+            } else {
+                contador = 0;
+            }
         }
-        return diagInversaCompleta;
+        return false;
     }
 
     public boolean tableroCompleto() {
-        boolean tableroCompleto = true;
         for (int i = 0; i < arrayTablero.length; i++) {
             for (int j = 0; j < arrayTablero.length; j++) {
-                if (arrayTablero[i][j] == ' ') {
-                    tableroCompleto = false;
-                    return tableroCompleto;
+                if (arrayTablero[i][j] == '*') {
+                    return false; // Devuelve false si hay alguna casilla vacía
                 }
             }
         }
-        return tableroCompleto;
+        return true; // Devuelve true si todas las casillas están llenas
+    }
+
+    public void rellenarTablero(){
+        for (int i = 0; i < arrayTablero.length; i++) {
+            for (int j = 0; j < arrayTablero[i].length; j++) {
+                arrayTablero[i][j] = '*';
+            }
+        }
     }
 }
