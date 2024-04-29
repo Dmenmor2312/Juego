@@ -3,7 +3,7 @@ package n_en_raya;
 public class Juego {
 
     public static void main(String[] args) {
-        Juego juego1 = new Juego();
+        JuegoNRaya juego1 = new JuegoNRaya();
         
     }
 
