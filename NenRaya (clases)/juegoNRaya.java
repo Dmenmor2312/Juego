@@ -3,32 +3,32 @@ package n_en_raya;
 import java.util.Scanner;
 
 public class JuegoNRaya {
-
-    static boolean terminado;
-    private static Jugador[] jugadores;
-    Scanner leer = new Scanner(System.in);
+    private boolean terminado;
+    private Jugador[] jugadores;
+    private Tablero tablero;
 
     public JuegoNRaya() {
         terminado = false;
         this.jugadores = new Jugador[2];
         crearJugador();
         seleccionarPrimerJugador();
-        Tablero tablero = new Tablero();
-        Tablero.crearTablero();
-        JuegoNRaya.jugar();
+        tablero = new Tablero();
+        tablero.crearTablero();
+        tablero.rellenarTablero();
+        jugar();
     }
 
-    public static void jugar() {
+    public void jugar() {
         while (!terminado) {
-            Tablero.colocarFicha();
-            Tablero.mostrarTablero();
-            boolean verificarFinalizacion = Tablero.verificarFinalizacion(terminado, terminado, terminado, terminado, terminado);
+            tablero.colocarFicha(jugadorActual());
+            tablero.mostrarTablero();
+            terminado = tablero.verificarFinalizacion(jugadorActual());
             cambiarTurno();
         }
     }
 
-    public static void cambiarTurno(){
-        if(jugadores[0].isTurno()){
+    public void cambiarTurno() {
+        if (jugadores[0].isTurno()) {
             jugadores[0].setTurno(false);
             jugadores[1].setTurno(true);
         } else {
@@ -36,8 +36,8 @@ public class JuegoNRaya {
             jugadores[1].setTurno(false);
         }
     }
-    
-    public static Jugador jugadorActual() {
+
+    public Jugador jugadorActual() {
         if (jugadores[0].isTurno()) {
             return jugadores[0];
         } else {
@@ -45,20 +45,22 @@ public class JuegoNRaya {
         }
     }
 
-public void seleccionarPrimerJugador() {
+    public void seleccionarPrimerJugador() {
+        Scanner leer = new Scanner(System.in);
         String jugador;
         do {
             System.out.println("¿Quien es el primer jugador?");
             jugador = leer.next();
         } while (!jugador.equals(jugadores[0].getNombre()) && !jugador.equals(jugadores[1].getNombre()));
-        if(jugador.equals(jugadores[0])){
+        if (jugador.equals(jugadores[0].getNombre())) {
             jugadores[0].setTurno(true);
-        }else{
+        } else if (jugador.equals(jugadores[1].getNombre())) {
             jugadores[1].setTurno(true);
         }
     }
 
     public void crearJugador() {
+        Scanner leer = new Scanner(System.in);
         String nombre;
         char ficha;
         for (int i = 0; i < jugadores.length; i++) {
@@ -70,5 +72,4 @@ public void seleccionarPrimerJugador() {
             jugadores[i].setFicha(ficha);
         }
     }
-
 }
