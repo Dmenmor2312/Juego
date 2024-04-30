@@ -1,5 +1,3 @@
-package n_en_raya;
-
 import java.util.Scanner;
 
 public class JuegoNRaya {
@@ -15,16 +13,12 @@ public class JuegoNRaya {
         tablero = new Tablero();
         tablero.crearTablero();
         tablero.rellenarTablero();
-        jugar();
     }
 
     public void jugar() {
-        while (!terminado) {
-            tablero.colocarFicha(jugadorActual());
-            tablero.mostrarTablero();
-            terminado = tablero.verificarFinalizacion(jugadorActual());
-            cambiarTurno();
-        }
+        tablero.colocarFicha(jugadorActual());
+        tablero.mostrarTablero();
+        terminado = tablero.verificarFinalizacion(jugadorActual());
     }
 
     public void cambiarTurno() {
@@ -71,5 +65,13 @@ public class JuegoNRaya {
             ficha = leer.next().charAt(0);
             jugadores[i].setFicha(ficha);
         }
+    }
+
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado){
+        this.terminado = terminado;
     }
 }
