@@ -1,5 +1,3 @@
-package n_en_raya;
-
 import java.util.Scanner;
 
 public class Tablero {
