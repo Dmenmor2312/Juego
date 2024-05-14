@@ -1,25 +1,11 @@
-import java.util.Scanner;
-
-public class Njuegos {
-
-    private JuegoNRaya [] arrayJuegos;
+public abstract class Njuegos extends Juego{
+    private boolean terminado;
 
     public Njuegos(){
-        
+        this.terminado = false;
     }
 
-    public JuegoNRaya [] crearArrayJuegos() {
-        Scanner leer = new Scanner(System.in);
-        System.out.println("¿A cuantos juegos quieres jugar al mismo tiempo?");
-        int tamaño = leer.nextInt();
-        arrayJuegos = new JuegoNRaya[tamaño];
-        for (int i = 0; i < arrayJuegos.length; i++) {
-            arrayJuegos[i] = new JuegoNRaya();
-        }
-        return arrayJuegos;
-    }
-
-    public boolean verificarJuegosTerminados(JuegoNRaya[] arrayJuegos) {
+    public static boolean verificarJuegosTerminados(Njuegos [] arrayJuegos) {
         boolean seguir = false;
         for (int i = 0; i < arrayJuegos.length && !seguir; i++) {
             if (!arrayJuegos[i].getTerminado()) {
@@ -28,14 +14,15 @@ public class Njuegos {
         }
         return seguir;
     }
-    public void cambiarJuegos(JuegoNRaya[] arrayJuegos) {
+
+    public static void cambiarJuegos(Njuegos [] arrayJuegos) {
         boolean juegoTerminado = false;
         while (!juegoTerminado) {
             juegoTerminado = true;
             for (int i = 0; i < arrayJuegos.length; i++) {
                 if (!arrayJuegos[i].getTerminado()) {
                     arrayJuegos[i].jugar();
-                    juegoTerminado = false; // Si al menos un juego no está terminado, aún debemos continuar
+                    juegoTerminado = false;
                 } else {
                     arrayJuegos[i].setTerminado(true);
                 }
@@ -44,4 +31,14 @@ public class Njuegos {
         }
     }
     
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado){
+        this.terminado = terminado;
+    }
+    
+    public abstract void jugar();
+    public abstract void cambiarTurno();
 }
