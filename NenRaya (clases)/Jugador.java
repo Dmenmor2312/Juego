@@ -1,5 +1,3 @@
-package n_en_raya;
-
 public class Jugador {
 
     private char ficha;
