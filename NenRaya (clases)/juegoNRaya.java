@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class JuegoNRaya {
+public class JuegoNRaya extends Njuegos{
     private boolean terminado;
     private Jugador[] jugadores;
     private Tablero tablero;
@@ -66,7 +66,7 @@ public class JuegoNRaya {
             jugadores[i].setFicha(ficha);
         }
     }
-
+    
     public boolean getTerminado() {
         return terminado;
     }
